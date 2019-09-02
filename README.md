@@ -137,10 +137,12 @@ end Next_Subject;
 &nbsp;
 &nbsp;
 
-## Knwon Problems ##
+## Known Problems ##
 * _DMA_: Both, the USB and Sound Linux VM subjects make use of the eDMA controller. Therefore, running both guests together would result in a separation conflict due to missing SMMU support.
+
 * _UART_: Due to hardware restrictions all three components - i.e. the Muen SK hypervisor, the Linux subject and the native subject - make use of the same serial connection. This can sometimes lead to some strange output on the serial console but could be solved by writing a native subject that virtualizes the UART controller.
-* _Kermit Scripts_: The kermit scripts are not too reliable. Therefore, one can omit the deploy methode when calling the build and run scripts - this only connects to the NXP LS1012A U-Boot console and one can load the MuenSK system manually with
+
+* _Kermit Scripts_: The kermit scripts are not too reliable. Therefore, one can omit the deploy method when calling the build and run scripts - this only connects to the NXP LS1012A U-Boot console and one can load the MuenSK system manually with
     
     ```
     => tftp 0x96000000 muensk-system.itb
