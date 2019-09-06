@@ -17,23 +17,45 @@ The hardware setup is the most important requirement for a successful build and 
 ![Development Setup Image](devsetup.png)
 
 While the setup of the two network interfaces on the Host Machine depends on the OS and is therefore omitted, the U-Boot configuration has to be set as follows:
-```
-=> printenv
-=> setenv bootdelay -1
-=> setenv ipaddr 10.1.1.5
-=> setenv serverip 10.1.1.2
-=> saveenv
-=> reset
-=> printenv
+```bash
+    => printenv
+    => setenv bootdelay -1
+    => setenv ipaddr 10.1.1.5
+    => setenv serverip 10.1.1.2
+    => saveenv
+    => reset
+    => printenv
 ```
 
+&nbsp;
+
+## NXP Board Setup ##
+Before starting with the build of this project, the pre-boot loader and U-Boot binaries have to be uploaded to the TFTP server and written to the QSPI flash memory of the NXP LS1012A FRDM Board (all binaries can be found in the script directory in the u-boot folder). This can be achieved **(a)** by connecting the evaluation board with the Micro USB to USB cable to the development computer and starting the a serial console with the script from the repository, **(b)** by resetting the board, stopping the autoboot and entering the U-Boot prompt, **(c)** by setting the U-Boot environment variables with the correct IP addresses for the NXP LS1012A FRDM Board and the TFTP server and resetting the board again (as described above); **(d)** and, last, overwrite the PBL and U-Boot binary on the QSPI flash memory.
+
+```bash
+	# Environment Setup Check #
+	=> printenv
+	
+	# PBL Update #
+	=> tftp 0x80000000 PBL_0x33_0x05_800_250_1000_default.bin
+	=> sf probe 0:0; sf erase 0 40000; sf write 0x80000000 0x0 40000;
+	
+	# U - Boot Update #
+	=> tftp 0x80000000 u-boot.bin
+	=> sf probe 0:0; sf erase 0x100000 80000; sf write 0x80000000 0x100000 80000;
+	
+	# Linux Kernel Erase #
+	=> sf probe 0:0; sf erase $kernel_start $kernel_size;
+```
+
+Details can also be found in the QorIQ FRDM-LS1012A board Getting Started Guide on page 13.
+ 
 &nbsp;
 
 ## Build and Deployment ##
 
 ### Preparation ###
 Before starting the build and deployment process, the following software has to be installed:
-&nbsp;
 
 * _VirtualBox_: Download and install VirtualBox (tested with version 6.0.10) for the Host Machine's OS, c.f. [Official VirtualBox Download Page](https://www.virtualbox.org/wiki/Downloads).
 
@@ -48,33 +70,33 @@ Before working through this paragraph, make sure that the hardware is set up cor
 
 1. _Step One_: Place the Vagrantfile, the GNATPro 18.2 AArch64 Toolchain and the two Git ssh keys named 'id_rsa' / 'id_rsa.pub' into one folder.
 
-    ```
-    -- dir
+```
+    |- dir
         |- Vagrantfile
         |- gnatpro-18.2-aarch64-elf-linux64-bin.tar.gz
         |- id_rsa
         |- id_rsa.pub
-    ```
+```
 
 2. _Step Two_: Run the following commands to setup the Vagrant Development Environment VM and ssh into the automatically booted VM (**NOTE** connect the NXP LS1012A FRDM UART USB connector before executing this commands).
 
-    ```
+```bash
     $ vagrant up
     $ vagrant ssh
-    ```
+```
 
 3. _Step Three_: Clone the MuenOnARM Git repository and change into the Muen SK code root folder.
 
-    ```
+```bash
     $ git clone git@git.codelabs.ch:/muenonarm.git
     $ cd muenonarm/03_code/01_muensk
-    ```
+```
 
 4. _Step Four_: Build and run the project by executing the according script (**NOTE** type --help or -h to get a full usage description). This script **(a)** First builds the given Linux VM subject - during this process the menuconfig target is called for the buildroot, the Linux Kernel and the Busybox system. One should quick check the loaded configurations with *1* 'Buildroot -> System Configuration' must have "Welcome to MuenOnARM" as welcome text; *2* 'Linux Kernel 5.2 -> Platform Selection' the following architectures have to be selected "ARMv8 based Freescale, MuenSK based and ARMv8 based NXB"; *3* 'Busybox -> Network Utilities' USB Linux has to select ifup / ifdown and others, but for Sound and Minimal Linux VM no network packages are selected.
 
-    ```
+```bash
     $ ./build_and_run.sh -t usb -d tftp
-    ```
+```
 
 &nbsp;
 
@@ -85,18 +107,18 @@ To test the deployed MuenSK configurations, one can do the following:
 
 * _Sound Linux_: This Linux subject has some support for playing sound (but no network). Run the following commands in the UART console to test it.
 
-    ```
+```css
     # cd /media/music
     # aplay -f S16_LE -r 44100 -t wav -c 2 harry_potter_short.wav
     # aplay -f S16_LE -r 44100 -t wav -c 2 lord_of_the_rings_short.wav
     # aplay -f S16_LE -r 44100 -t wav -c 2 pirates_of_the_caribbean_short.wav
-    ```
+```
 
 * _USB Linux_: This is the only Linux subject that is connected to the NDN network and running OpenSSH and a Webserver. Open a browser on a computer connected to the NDN network and search for the page with the IP 10.1.1.8 or ssh into the machine (user 'root', password 'root', ip 10.1.1.8). Test the separation with an illegal memory access.
 
-    ```
+```css
     # devmem 0x80000000
-    ```
+```
 
 &nbsp;
 
@@ -117,14 +139,14 @@ The following two topics could be particularly interesting for setting up an ada
 
 * _Annoying Subject Output_: The simplest way to get rid of the native subject's output to the console is to change the function `Next_Subject` in the MuenSK hypervisor code in the file `sk-scheduling_plan.adb` to always return Subject 1 (i.e. Linux VM subject).
 
-```
-function Next_Subject (Current : SSC.Component_ID_Type)
-                       return SSC.Component_ID_Type
-is
-    pragma Unreferenced (Current);
-begin
-    return SK.Subjects_Configuration.Subject_1;
-end Next_Subject;
+```ada
+	function Next_Subject (Current : SSC.Component_ID_Type)
+		               return SSC.Component_ID_Type
+	is
+	    pragma Unreferenced (Current);
+	begin
+	    return SK.Subjects_Configuration.Subject_1;
+	end Next_Subject;
 ```
 
 &nbsp;
@@ -136,10 +158,10 @@ end Next_Subject;
 
 * _Kermit Scripts_: The kermit scripts are not too reliable. Therefore, one can omit the deploy method when calling the build and run scripts - this only connects to the NXP LS1012A U-Boot console and one can load the MuenSK system manually with
 
-    ```
+```
     => tftp 0x96000000 muensk-system.itb
     => imxtract 0x96000000 muensk-1 0x83800000; imxtract 0x96000000 subjectone-1 0x86000000; imxtract 0x96000000 fdt-1 0x90000000; imxtract 0x96000000 kernel-1 0x90080000
     => go 0x83800000
-    ```
+```
 
 &nbsp;
