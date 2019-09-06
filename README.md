@@ -9,6 +9,8 @@ This repository contains the Muen on ARM project. Currently, three different Mue
 
 3. a USB Linux configuration with a Linux VM subject, that is accessible via ssh (i.e. openssh) and runs a webserver (i.e. lighttpd) and a native subject. This Quickstart Guide explains how to build and run the project.
 
+**ATTENTION** - do not use `markdown`to convert this file into html due to problems with the presentation of the code sections. All tested viewer (Remarkable, ReText etc.) and Online Converter (e.g. [https://www.browserling.com/tools/markdown-to-html](https://www.browserling.com/tools/markdown-to-html)) convert this file correctly.
+
 &nbsp;
 
 ## Hardware Setup ##
@@ -84,7 +86,7 @@ Before working through this paragraph, make sure that the hardware is set up cor
 
 1. _Step One_: Place the Vagrantfile, the GNATPro 18.2 AArch64 Toolchain and the two Git ssh keys named 'id_rsa' / 'id_rsa.pub' into one folder.
 
-```
+```bash
     |- dir
         |- Vagrantfile
         |- gnatpro-18.2-aarch64-elf-linux64-bin.tar.gz
@@ -174,7 +176,7 @@ The following two topics could be particularly interesting for setting up an ada
 
 * _Kermit Scripts_: The kermit scripts are not too reliable. Therefore, one can omit the deploy method when calling the build and run scripts - this only connects to the NXP LS1012A U-Boot console and one can load the MuenSK system manually with the following code. **NOTE** to detach from the Kermit console, use the command `Ctrl + Alt Gr + \`and press `q` to exit.
 
-```
+```bash
     => tftp 0x96000000 muensk-system.itb
     => imxtract 0x96000000 muensk-1 0x83800000; imxtract 0x96000000 subjectone-1 0x86000000; imxtract 0x96000000 fdt-1 0x90000000; imxtract 0x96000000 kernel-1 0x90080000
     => go 0x83800000
