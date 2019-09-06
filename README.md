@@ -1,7 +1,13 @@
 # Muen on ARM - Quickstart Guide #
 
 ## Introduction ##
-This repository contains the Muen on ARM project. Currently, three different Muen SK system configurations are available - **(1)** a Minimal Linux configuration with a Linux VM subject and a native subject, **(2)** a Sound Linux configuration with a Linux VM subject, that is able to play some audio files, and a native subject and **(3)** a USB Linux configuration with a Linux VM subject, that is accessible via ssh (i.e. openssh) and runs a webserver (i.e. lighttpd) and a native subject. This Quickstart Guide explains how to build and run the project.
+This repository contains the Muen on ARM project. Currently, three different Muen SK system configurations are available:
+
+1. a Minimal Linux configuration with a Linux VM subject and a native subject,
+
+2. a Sound Linux configuration with a Linux VM subject, that is able to play some audio files, and a native subject and
+
+3. a USB Linux configuration with a Linux VM subject, that is accessible via ssh (i.e. openssh) and runs a webserver (i.e. lighttpd) and a native subject. This Quickstart Guide explains how to build and run the project.
 
 &nbsp;
 
@@ -30,26 +36,34 @@ While the setup of the two network interfaces on the Host Machine depends on the
 &nbsp;
 
 ## NXP Board Setup ##
-Before starting with the build of this project, the pre-boot loader and U-Boot binaries have to be uploaded to the TFTP server and written to the QSPI flash memory of the NXP LS1012A FRDM Board (all binaries can be found in the script directory in the u-boot folder). This can be achieved **(a)** by connecting the evaluation board with the Micro USB to USB cable to the development computer and starting the a serial console with the script from the repository, **(b)** by resetting the board, stopping the autoboot and entering the U-Boot prompt, **(c)** by setting the U-Boot environment variables with the correct IP addresses for the NXP LS1012A FRDM Board and the TFTP server and resetting the board again (as described above); **(d)** and, last, overwrite the PBL and U-Boot binary on the QSPI flash memory.
+Before starting with the build of this project, the pre-boot loader and U-Boot binaries have to be updated via the TFTP server and written to the QSPI flash memory of the NXP LS1012A FRDM Board (all binaries can be found in the script directory in the u-boot folder). This can be achieved
+
+1. by connecting the evaluation board with the Micro USB to USB cable to the development computer and starting the a serial console with the script from the repository,
+
+2. by resetting the board, stopping the autoboot and entering the U-Boot prompt,
+
+3. by setting the U-Boot environment variables with the correct IP addresses for the NXP LS1012A FRDM Board and the TFTP server and resetting the board again (as described above);
+
+4. and, last, overwrite the PBL and U-Boot binary on the QSPI flash memory.
 
 ```bash
 	# Environment Setup Check #
 	=> printenv
-	
+
 	# PBL Update #
 	=> tftp 0x80000000 PBL_0x33_0x05_800_250_1000_default.bin
 	=> sf probe 0:0; sf erase 0 40000; sf write 0x80000000 0x0 40000;
-	
+
 	# U - Boot Update #
 	=> tftp 0x80000000 u-boot.bin
 	=> sf probe 0:0; sf erase 0x100000 80000; sf write 0x80000000 0x100000 80000;
-	
+
 	# Linux Kernel Erase #
 	=> sf probe 0:0; sf erase $kernel_start $kernel_size;
 ```
 
 Details can also be found in the QorIQ FRDM-LS1012A board Getting Started Guide on page 13.
- 
+
 &nbsp;
 
 ## Build and Deployment ##
@@ -57,11 +71,11 @@ Details can also be found in the QorIQ FRDM-LS1012A board Getting Started Guide 
 ### Preparation ###
 Before starting the build and deployment process, the following software has to be installed:
 
-* _VirtualBox_: Download and install VirtualBox (tested with version 6.0.10) for the Host Machine's OS, c.f. [Official VirtualBox Download Page](https://www.virtualbox.org/wiki/Downloads).
+* _VirtualBox_: Download and install VirtualBox (tested with version 6.0.10) for the Host Machine's OS, c.f. [Official VirtualBox Download Page](https://www.virtualbox.org/wiki/Downloads). 
 
 * _VirtualBox Extension Pack_: Also needs to be installed to be able to pass through the UART USB serial connection, c.f. [Official VirtualBox Download Page](https://www.virtualbox.org/wiki/Downloads).
 
-* _Vagrant_: Download and install Vagrant by HashiCorp, c.f. [Official Vagrant Download Page](https://www.vagrantup.com/downloads.html).
+* _Vagrant_: Download and install Vagrant by HashiCorp, c.f. [Official Vagrant Download Page](https://www.vagrantup.com/downloads.html) (**NOTE** Vagrant has to be current enough, e.g. the versions provided by the official Debian Stretch apt repositories are to old).
 
 &nbsp;
 
@@ -92,7 +106,7 @@ Before working through this paragraph, make sure that the hardware is set up cor
     $ cd muenonarm/03_code/01_muensk
 ```
 
-4. _Step Four_: Build and run the project by executing the according script (**NOTE** type --help or -h to get a full usage description). This script **(a)** First builds the given Linux VM subject - during this process the menuconfig target is called for the buildroot, the Linux Kernel and the Busybox system. One should quick check the loaded configurations with *1* 'Buildroot -> System Configuration' must have "Welcome to MuenOnARM" as welcome text; *2* 'Linux Kernel 5.2 -> Platform Selection' the following architectures have to be selected "ARMv8 based Freescale, MuenSK based and ARMv8 based NXB"; *3* 'Busybox -> Network Utilities' USB Linux has to select ifup / ifdown and others, but for Sound and Minimal Linux VM no network packages are selected.
+4. _Step Four_: Build and run the project by executing the according script (**NOTE** type --help or -h to get a full usage description). This script **(a)** First builds the given Linux VM subject - during this process the menuconfig target is called for the buildroot, the Linux Kernel and the Busybox system. One should quick check the loaded configurations with *1* 'Buildroot -> System Configuration' must have "Welcome to MuenOnARM" as welcome text; *2* 'Linux Kernel 5.2 -> Platform Selection' the following architectures have to be selected "ARMv8 based Freescale, MuenSK based and ARMv8 based NXB"; *3* 'Busybox -> Network Utilities' USB Linux has to select ifup / ifdown and others, but for Sound and Minimal Linux VM no network packages are selected. And **(b)** finally calls the Kermit TFTP odr Serial script.
 
 ```bash
     $ ./build_and_run.sh -t usb -d tftp
@@ -137,7 +151,7 @@ The following two topics could be particularly interesting for setting up an ada
 
 * _NXP Development Network_: To change the network configuration, one has to first change the U-Boot Environment Variables on the NXP LS1012A FRDM evaluation board, then adapt the Vagrantfile IP address for the Development VM as well as change the Host Machine's interface and finally change the network interface configuration in the Linux Subject source (i.e. network overlay -> etc -> interfaces).
 
-* _Annoying Subject Output_: The simplest way to get rid of the native subject's output to the console is to change the function `Next_Subject` in the MuenSK hypervisor code in the file `sk-scheduling_plan.adb` to always return Subject 1 (i.e. Linux VM subject).
+* _Annoying Subject Output_: The simplest way to get rid of the native subject's output to the console is to change the function `Next_Subject` in the MuenSK hypervisor code in the file `sk-scheduling_plan.adb` to always return Subject 1 (i.e. Linux VM subject). Then just rebuild the Muen SK system as described under _MuenSK_ and load it with the TFTP script from the script directory or manually from the U-Boot console (see _Kermit Scripts_ section in the next paragraph) to the NXP LS1012A FRDM board.
 
 ```ada
 	function Next_Subject (Current : SSC.Component_ID_Type)
@@ -156,7 +170,9 @@ The following two topics could be particularly interesting for setting up an ada
 
 * _UART_: Due to hardware restrictions all three components - i.e. the Muen SK hypervisor, the Linux subject and the native subject - make use of the same serial connection. This can sometimes lead to some strange output on the serial console but could be solved by writing a native subject that virtualizes the UART controller.
 
-* _Kermit Scripts_: The kermit scripts are not too reliable. Therefore, one can omit the deploy method when calling the build and run scripts - this only connects to the NXP LS1012A U-Boot console and one can load the MuenSK system manually with
+* _USB_: With the currently used setup, the USB 3.0 controller can only handle devices with USB 2.0 and lower (cause could not be found yet). To get around this problem, one can connect a USB 2.0 hub to the board and plug in the USB 3.0 device via the hub. If during the linux boot process the USB driver error message `over-current`shows up, there is something wrong with the additional power supply (i.e. no or not enough power, see _Hardware Setup_).
+
+* _Kermit Scripts_: The kermit scripts are not too reliable. Therefore, one can omit the deploy method when calling the build and run scripts - this only connects to the NXP LS1012A U-Boot console and one can load the MuenSK system manually with the following code. **NOTE** to detach from the Kermit console, use the command `Ctrl + Alt Gr + \`and press `q` to exit.
 
 ```
     => tftp 0x96000000 muensk-system.itb
