@@ -9,7 +9,7 @@ This repository contains the Muen on ARM project. Currently, three different Mue
 
 3. a USB Linux configuration with a Linux VM subject, that is accessible via ssh (i.e. openssh) and runs a webserver (i.e. lighttpd) and a native subject. This Quickstart Guide explains how to build and run the project.
 
-**ATTENTION** - do not use `markdown`to convert this file into html due to problems with the presentation of the code sections. All tested viewer (Remarkable, ReText etc.) and Online Converter (e.g. [https://www.browserling.com/tools/markdown-to-html](https://www.browserling.com/tools/markdown-to-html)) convert this file correctly.
+**ATTENTION** - do not use `markdown` to convert this file into html due to problems with the presentation of the code sections. All tested viewer (Remarkable, ReText etc.) and Online Converter (e.g. [https://www.browserling.com/tools/markdown-to-html](https://www.browserling.com/tools/markdown-to-html)) convert this file correctly.
 
 &nbsp;
 
@@ -73,7 +73,7 @@ Details can also be found in the QorIQ FRDM-LS1012A board Getting Started Guide 
 ### Preparation ###
 Before starting the build and deployment process, the following software has to be installed:
 
-* _VirtualBox_: Download and install VirtualBox (tested with version 6.0.10) for the Host Machine's OS, c.f. [Official VirtualBox Download Page](https://www.virtualbox.org/wiki/Downloads). 
+* _VirtualBox_: Download and install VirtualBox (tested with version 6.0.10) for the Host Machine's OS, c.f. [Official VirtualBox Download Page](https://www.virtualbox.org/wiki/Downloads).
 
 * _VirtualBox Extension Pack_: Also needs to be installed to be able to pass through the UART USB serial connection, c.f. [Official VirtualBox Download Page](https://www.virtualbox.org/wiki/Downloads).
 
@@ -172,9 +172,9 @@ The following two topics could be particularly interesting for setting up an ada
 
 * _UART_: Due to hardware restrictions all three components - i.e. the Muen SK hypervisor, the Linux subject and the native subject - make use of the same serial connection. This can sometimes lead to some strange output on the serial console but could be solved by writing a native subject that virtualizes the UART controller.
 
-* _USB_: With the currently used setup, the USB 3.0 controller can only handle devices with USB 2.0 and lower (cause could not be found yet). To get around this problem, one can connect a USB 2.0 hub to the board and plug in the USB 3.0 device via the hub. If during the linux boot process the USB driver error message `over-current`shows up, there is something wrong with the additional power supply (i.e. no or not enough power, see _Hardware Setup_).
+* _USB_: With the currently used setup, the USB 3.0 controller can only handle devices with USB 2.0 and lower (cause could not be found yet). To get around this problem, one can connect a USB 2.0 hub to the board and plug in the USB 3.0 device via the hub. If during the linux boot process the USB driver error message `over-current` shows up, there is something wrong with the additional power supply (i.e. no or not enough power, see _Hardware Setup_).
 
-* _Kermit Scripts_: The kermit scripts are not too reliable. Therefore, one can omit the deploy method when calling the build and run scripts - this only connects to the NXP LS1012A U-Boot console and one can load the MuenSK system manually with the following code. **NOTE** to detach from the Kermit console, use the command `Ctrl + Alt Gr + \`and press `q` to exit.
+* _Kermit Scripts_: The kermit scripts are not too reliable. Therefore, one can omit the deploy method when calling the build and run scripts - this only connects to the NXP LS1012A U-Boot console and one can load the MuenSK system manually with the following code. **NOTE** to detach from the Kermit console, use the command `Ctrl + Alt Gr + \` and press `q` to exit.
 
 ```bash
     => tftp 0x96000000 muensk-system.itb
