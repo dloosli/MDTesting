@@ -30,7 +30,7 @@ The hardware setup is the most important requirement for a successful build and 
 
     <div class="center">
 
-    <img src="images/devsetup_nxp.png" style="width:100.0%" alt="image" />
+    <img src="devsetup_nxp.png" style="width:100.0%" alt="image" />
 
     </div>
 
@@ -173,7 +173,7 @@ The following two topics could be particularly interesting for setting up an ada
 
 -   *Annoying Subject Output:* The simplest way to get rid of the native subject’s output to the console is to change the function `Next_Subject` in the MuenSK hypervisor code in the file `sk-scheduling_plan.adb` to always return Subject 1 (i.e. Linux VM subject). Then just rebuild the Muen SK system as described under *MuenSK* and load it with the TFTP script from the script directory or manually from the U-Boot console (see *Kermit Scripts* section in the next paragraph) to the NXP LS1012A FRDM board.
 
-    ```
+    ```ada
     function Next_Subject (Current : SSC.Component_ID_Type)
                            return SSC.Component_ID_Type
     is
