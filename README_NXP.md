@@ -1,7 +1,12 @@
-<center>
-**Muen Test HEADER**
-<br />
-</center>
+<div class="center">
+
+<embed src="images/muenonarm.eps" />  
+**Muen On ARM - Quickstart Guide NXP**  
+*version: 0.0*  
+
+------------------------------------------------------------------------
+
+</div>
 
 # Introduction
 
@@ -23,6 +28,11 @@ The hardware setup is the most important requirement for a successful build and 
 
 -   *NXP LS1012A FRDM:* **(a)** U-Boot connected via the Ethernet PHY Interface to the NDN (esp. Vagrant DevEnv VM); **(b)** Micro USB to USB serial connection between the evaluation board and the Vagrant DevEnv VM; **(c)** USB to Ethernet connection to the NDN for the USB Linux configuration with **(d)** an additionally required External Power Supply (i.e. 5V, 1A) to power the USB Controller and Interface; **(e)** and Audio Jack to external speakers for the Sound Linux configuration.
 
+    <div class="center">
+
+    <img src="images/devsetup.png" style="width:100.0%" alt="image" />
+
+    </div>
 
 -   *NXP Bootloader:* While the setup of the two network interfaces on the Host Machine depends on the OS and is therefore omitted, the U-Boot configuration has to be set as follows.
 
