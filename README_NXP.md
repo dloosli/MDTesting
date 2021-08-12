@@ -1,12 +1,9 @@
-<div class="center">
-
-<embed src="images/muenonarm.eps" />  
-**Muen On ARM - Quickstart Guide NXP**  
-*version: 0.0*  
-
-------------------------------------------------------------------------
-
-</div>
+<center>
+<embed src="images/muenonarm.png" width="200" />
+<font size="6">**Muen On ARM - Quickstart Guide NXP**</font>
+<font size="2">*version: 0.0*</font>
+<br />
+</center>
 
 # Introduction
 
@@ -28,15 +25,10 @@ The hardware setup is the most important requirement for a successful build and 
 
 -   *NXP LS1012A FRDM:* **(a)** U-Boot connected via the Ethernet PHY Interface to the NDN (esp. Vagrant DevEnv VM); **(b)** Micro USB to USB serial connection between the evaluation board and the Vagrant DevEnv VM; **(c)** USB to Ethernet connection to the NDN for the USB Linux configuration with **(d)** an additionally required External Power Supply (i.e. 5V, 1A) to power the USB Controller and Interface; **(e)** and Audio Jack to external speakers for the Sound Linux configuration.
 
-    <div class="center">
-
-    <img src="devsetup_nxp.png" style="width:100.0%" alt="image" />
-
-    </div>
 
 -   *NXP Bootloader:* While the setup of the two network interfaces on the Host Machine depends on the OS and is therefore omitted, the U-Boot configuration has to be set as follows.
 
-    ```
+    ``` bash
     > printenv
     > setenv bootdelay -1
     > setenv ipaddr 10.1.1.5
@@ -62,7 +54,7 @@ After a successful installation of the above mentioned software, the Vagrant Dev
 
 1.  *Step One:* Place the Vagrantfile, the muenbuild.box and the two Git ssh keys named ’id_rsa’ / ’id_rsa.pub’ into one folder.
 
-    ```
+    ``` bash
     |- dir
         |- Vagrantfile
         |- muenbuild.box
@@ -72,7 +64,7 @@ After a successful installation of the above mentioned software, the Vagrant Dev
 
 2.  *Step Two:* Run the following commands in the Vagrantfile directory to add the custom muenbuild box to Vagrant, to start the Vagrant Development Environment VM and to ssh into the automatically booted VM (**NOTE** - connect the NXP LS1012A FRDM UART USB connector before executing this commands).
 
-    ```
+    ``` bash
     $ vagrant box add --name muenbuild ./muenbuild.box
     $ vagrant up
     $ vagrant ssh
@@ -90,7 +82,7 @@ Before starting with the build of this project, the pre-boot loader and U-Boot b
 
 4.  and, last, overwrite the PBL and U-Boot binary on the QSPI flash memory.
 
-```
+``` bash
 # Environment Setup Check #
 > printenv
 
@@ -116,21 +108,21 @@ Before working through this paragraph, make sure that the build environment and 
 
 1.  *Step One:* If not already done in the Build Environment Setup step, run the following commands in the Vagrantfile directory to start the Vagrant Development Environment VM and ssh into the automatically booted VM (**NOTE** - connect the NXP LS1012A FRDM UART USB connector before executing this commands).
 
-    ```
+    ``` bash
     $ vagrant up
     $ vagrant ssh
     ```
 
 2.  *Step Two:* Clone the MuenOnARM Git repository and change into the Muen SK code root folder.
 
-    ```
+    ``` bash
     $ git clone git@git.codelabs.ch:/muenonarm.git
     $ cd muenonarm/03_code/01_muensk
     ```
 
 3.  *Step Three:* Build and run the project by executing the according script (**NOTE** - type –help or -h to get a full usage description). This script **(a)** First builds the given Linux VM subject - during this process the menuconfig target is called for the buildroot, the Linux Kernel and the Busybox system. One should quick check the loaded configurations with \*1\* ’Buildroot -> System Configuration’ must have "Welcome to MuenOnARM" as welcome text; \*2\* ’Linux Kernel 5.2 -> Platform Selection’ the following architectures have to be selected "ARMv8 based Freescale, MuenSK based and ARMv8 based NXB"; \*3\* ’Busybox -> Network Utilities’ USB Linux has to select ifup / ifdown and others, but for Sound and Minimal Linux VM no network packages are selected. And **(b)** finally calls the Kermit TFTP odr Serial script.
 
-    ```
+    ``` bash
     $ ./build_and_run.sh --board nxp --target usb --deploy tftp
     # or
     $ ./build_and_run.sh -b nxp -t usb -d tftp
@@ -144,7 +136,7 @@ To test the deployed MuenSK configurations, one can do the following:
 
 -   *Sound Linux:* This Linux subject has some support for playing sound (but no network). Run the following commands in the UART console to test it.
 
-    ```
+    ``` bash
     # cd /media/music
     # aplay -f S16_LE -r 44100 -t wav -c 2 harry_potter_short.wav
     # aplay -f S16_LE -r 44100 -t wav -c 2 lord_of_the_rings_short.wav
@@ -153,7 +145,7 @@ To test the deployed MuenSK configurations, one can do the following:
 
 -   *USB Linux:* This is the only Linux subject that is connected to the NDN network and running OpenSSH and a Webserver. Open a browser on a computer connected to the NDN network and search for the page with the IP 10.1.1.8 or ssh into the machine (user ’root’, password ’root’, ip 10.1.1.8). Test the separation with an illegal memory access.
 
-    ```
+    ``` bash
     # devmem 0x80000000
     ```
 
@@ -173,7 +165,7 @@ The following two topics could be particularly interesting for setting up an ada
 
 -   *Annoying Subject Output:* The simplest way to get rid of the native subject’s output to the console is to change the function `Next_Subject` in the MuenSK hypervisor code in the file `sk-scheduling_plan.adb` to always return Subject 1 (i.e. Linux VM subject). Then just rebuild the Muen SK system as described under *MuenSK* and load it with the TFTP script from the script directory or manually from the U-Boot console (see *Kermit Scripts* section in the next paragraph) to the NXP LS1012A FRDM board.
 
-    ```ada
+    ``` ada
     function Next_Subject (Current : SSC.Component_ID_Type)
                            return SSC.Component_ID_Type
     is
@@ -193,7 +185,7 @@ The following two topics could be particularly interesting for setting up an ada
 
 -   *Kermit Scripts:* The kermit scripts are not too reliable. Therefore, one can omit the deploy method when calling the build and run scripts - this only connects to the NXP LS1012A U-Boot console and one can load the MuenSK system manually with the following code. **NOTE** - to detach from the Kermit console, use the command `Ctrl + Alt Gr + \` and press `q` to exit.
 
-    ```
+    ``` bash
     > tftp 0x96000000 muensk-system.itb
     > imxtract 0x96000000 muensk-1 0x83800000; imxtract 0x96000000 subjectone-1 0x86000000; imxtract 0x96000000 fdt-1 0x90000000; imxtract 0x96000000 kernel-1 0x90080000
     > go 0x83800000
