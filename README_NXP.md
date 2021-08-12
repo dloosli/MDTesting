@@ -1,14 +1,7 @@
-<div class="center">
-
-    <embed src="images/muenonarm.eps" />
-
-    **Muen On ARM - Quickstart Guide NXP**
-
-    *version: 0.0*
-
-    ------------------------------------------------------------------------
-
-</div>
+<embed src="devsetup.png" />
+**Muen On ARM - Quickstart Guide NXP**
+*version: 0.0*
+------------------------------------------------------------------------
 
 # Introduction
 
