@@ -1,8 +1,8 @@
-<center>
+<div>
 <img src="devsetup.png" style="width:100.0%" alt="image" />
 **Muen On ARM - Quickstart Guide NXP**
 *version: 0.0*
-</center>
+</div>
 
 # Introduction
 
