@@ -30,7 +30,7 @@ The hardware setup is the most important requirement for a successful build and 
 
     <div class="center">
 
-    <img src="images/devsetup.png" style="width:100.0%" alt="image" />
+    <img src="devsetup.png" style="width:100.0%" alt="image" />
 
     </div>
 
