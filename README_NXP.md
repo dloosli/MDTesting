@@ -1,4 +1,4 @@
-<center>
+<div style="text-align: center;">
 
 <img src="devsetup.png" style="width:100.0%" alt="image" />
 
@@ -8,7 +8,7 @@
 
 <br />
 
-</center>
+</div>
 
 # Introduction
 
