@@ -1,5 +1,5 @@
 <center>
-<embed src="images/muenonarm.png" width="200" />
+<img src="devsetup.png" style="width:10.0%" alt="image" />
 <p style="font-size:6"><b>Muen On ARM - Quickstart Guide NXP</b></p>
 <p><i>version: 0.0</i></p>
 <br />
